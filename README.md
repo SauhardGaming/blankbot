@@ -9,7 +9,7 @@
 <p><em><strong>2) Put your token in 'config.json' file.</strong></em></p>
 <p><em><strong>3) Run the 'Start.bat' file.</strong></em></p>
 <p><em><strong>4) Type (prefix)help, the default prefix is x so you may type xhelp.</strong></em></p>
-<p><em><strong>5)The bot will send you instructions.</strong></em></p>
+<p><em><strong>5) The bot will send you instructions.</strong></em></p>
 <p>&nbsp;</p>
 <p><span style="color: #00ff00;"><span style="color: #00ff00;"><span style="color: #00ff00;"><span style="color: #0000ff;"><strong>Feel free to contact me on discord:&nbsp;<span style="color: #ff0000;">Blank#9999</span></strong></span></span></span></span></p>
 <p>&nbsp;</p>
