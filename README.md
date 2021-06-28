@@ -13,6 +13,8 @@
 <p>&nbsp;</p>
 <p><span style="color: #00ff00;"><span style="color: #00ff00;"><span style="color: #00ff00;"><span style="color: #0000ff;"><strong>Feel free to contact me on discord:&nbsp;<span style="color: #ff0000;">Blank#9999</span></strong></span></span></span></span></p>
 <p>&nbsp;</p>
+<p><span style="background-color: #ffffff;"><a style="background-color: #ffffff;" title="Repl.it" href="https://replit.com/@SauhardGaming/embedbot" target="_blank"><strong>Run on repl.it</strong></a></span></p>
+<p>&nbsp;</p>
 <h2>Please do not copy my content and download the selfbot from here only. It has no token logger.</h2>
 <p>&nbsp;</p>
 <h2><span style="color: #00ff00;">Virus total: <span style="background-color: #ffffff;"><a style="background-color: #ffffff;" title="Virus Total" href="https://www.virustotal.com/gui/file/104ecb6b95ec3877e0672ee4b85334c74a4d5a646a4670c2ab566c2d680f67a2/detection" target="_blank">Click here</a></span></span></h2>
