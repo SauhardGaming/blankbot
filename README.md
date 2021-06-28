@@ -1,5 +1,5 @@
 <h1><span style="text-decoration: underline;"><strong>Embed Bot</strong></span></h1>
-<h3>This is a selfbot designed to allow normal users to send embeds.</h3>
+<h3>This is a selfbot designed to allow normal discord users to send embeds.</h3>
 <p>&nbsp;</p>
 <h2>⚠️<strong><span style="text-decoration: underline;">Warning</span></strong>⚠️</h2>
 <h3>Do not use this bot in overpopulated server because there is a high chance that some people may report you because of breaking discord TOS</h3>
