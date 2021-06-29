@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 import datetime
 import functools
 import io
