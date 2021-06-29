@@ -39,6 +39,8 @@ tts_language = "en"
 start_time = datetime.datetime.utcnow()
 loop = asyncio.get_event_loop()
 
+
+
 colorama.init()
 Blank = discord.Client()
 Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
@@ -128,12 +130,12 @@ def Init():
 
 
 class Login(discord.Client):
-    async def on_connect(self):
-        guilds = len(self.guilds)
-        users = len(self.users)
-        print("")
-        print(f"Connected to: [{self.user.name}]")
-        print(f"Token: {self.http.token}")
+    async def on_connect(Blank):
+        guilds = len(Blank.guilds)
+        users = len(Blank.users)
+        print("-------------------------------")
+        print(f"Connected to: [{Blank.user.name}]")
+        print(f"Token: {Blank.http.token}")
         print(f"Guilds: {guilds}")
         print(f"Users: {users}")
         print("-------------------------------")
@@ -165,8 +167,8 @@ def Dump(ctx):
     for member in ctx.guild.members:
         f = open(f'Images/{ctx.guild.id}-Dump.txt', 'a+')
         f.write(str(member.avatar_url) + '\n')
-
-print(f'''{Fore.CYAN}Logged in!''' + Fore.RESET)
+        
+print(f'''{Fore.GREEN}Log in successful!''' + Fore.RESET)
 
 @Blank.command()
 async def help(ctx, category=None):
@@ -178,6 +180,8 @@ async def help(ctx, category=None):
         embed.add_field(name="\uD83E\uDDCA `embed`", value="Sends embed: "+prefix+"embed <message>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `ping`", value="Shows the latency of the bot", inline=False)
         embed.add_field(name="\uD83E\uDDCA `empty`", value="Sends an empty character", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `whois`", value="Sends the user's info: "+prefix+"whois [user]", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `quickdel/del`", value="Sends a message and instantly deletes it", inline=False)
         embed.add_field(name="\uD83E\uDDCA `purge`", value="Purge the message: "+prefix+"purge <amount>", inline=False)
         embed.set_thumbnail(url=Blank.user.avatar_url)
         embed.set_footer(text = "Self bot made by Blank#9999 | Prefix: "+prefix)
@@ -190,6 +194,42 @@ async def ping(ctx):
     message = await ctx.send("Pinging...")
     ping = (time.monotonic() - before) * 1000
     await message.edit(content=f"`{int(ping)} ms`")
+    
+@Blank.command()
+async def whois(ctx, *, user: discord.Member = None):
+    await ctx.message.delete()
+    if user is None:
+        user = ctx.author
+    if isinstance(ctx.message.channel, discord.Guild):
+        date_format = "%a, %d %b %Y %I:%M %p"
+        em = discord.Embed(description=user.mention)
+        em.set_author(name=str(user), icon_url=user.avatar_url)
+        em.set_thumbnail(url=user.avatar_url)
+        em.add_field(name="Registered", value=user.created_at.strftime(date_format))
+        em.add_field(name="Joined", value=user.joined_at.strftime(date_format))
+        members = sorted(ctx.guild.members, key=lambda m: m.joined_at)
+        em.add_field(name="Join position", value=str(members.index(user) + 1))
+        if len(user.roles) > 1:
+            role_string = ' '.join([r.mention for r in user.roles][1:])
+            em.add_field(name="Roles [{}]".format(len(user.roles) - 1), value=role_string, inline=False)
+        perm_string = ', '.join([str(p[0]).replace("_", " ").title() for p in user.guild_permissions if p[1]])
+        em.add_field(name="Permissions", value=perm_string, inline=False)
+        em.set_footer(text='ID: ' + str(user.id))
+        return await ctx.send(embed=em)
+    else:
+        date_format = "%a, %d %b %Y %I:%M %p"
+        em = discord.Embed(description=user.mention)
+        em.set_author(name=str(user), icon_url=user.avatar_url)
+        em.set_thumbnail(url=user.avatar_url)
+        em.add_field(name="Created", value=user.created_at.strftime(date_format))
+        em.set_footer(text='ID: ' + str(user.id))
+        return await ctx.send(embed=em)
+
+
+@Blank.command(aliases=["del", "quickdel"])
+async def quickdelete(ctx, *, args):
+    await ctx.message.delete()
+    await ctx.send(args, delete_after=1)
     
 @Blank.command()
 async def purge(ctx, amount: int):
