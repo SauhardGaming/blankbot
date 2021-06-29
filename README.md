@@ -1,4 +1,4 @@
-<h1><span style="text-decoration: underline;"><strong>Self Bot</strong></span></h1>
+<h1><span style="text-decoration: underline;"><strong>Blank's SelfBot</strong></span></h1>
 <h3>This is a selfbot designed to provide users with various features.</h3>
 <p>&nbsp;</p>
 <h2>⚠️<strong><span style="text-decoration: underline;">Warning</span></strong>⚠️</h2>
