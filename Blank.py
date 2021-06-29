@@ -25,7 +25,7 @@ from discord.ext import commands
 from discord.utils import get
 from gtts import gTTS
 
-class EMBEDBOT():
+class SelfBot():
     __version__ = 1
 
 with open('config.json') as f:
@@ -41,7 +41,7 @@ loop = asyncio.get_event_loop()
 
 colorama.init()
 Blank = discord.Client()
-Blank = commands.Bot(description='Blank EmbedBot', command_prefix=prefix, self_bot=True)
+Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
 Blank.remove_command('help')
 
 languages = {
@@ -121,7 +121,7 @@ def Init():
     token = config.get('token')
     try:
         Blank.run(token, bot=False, reconnect=True)
-        os.system(f'title (Blank EmbedBot) - Version {EMBEDBOT.__version__}')
+        os.system(f'title (Blank SelfBot) - Version {SelfBot.__version__}')
     except discord.errors.LoginFailure:
         print(f"{Fore.RED}[ERROR] {Fore.YELLOW}Improper token has been passed" + Fore.RESET)
         os.system('pause >NUL')
@@ -172,12 +172,39 @@ print(f'''{Fore.CYAN}Logged in!''' + Fore.RESET)
 async def help(ctx, category=None):
     await ctx.message.delete()
     if category is None:
-        embed = discord.Embed(color=0xFF0000, timestamp=ctx.message.created_at)
-        embed.set_author(name="Blank EmbedBot | Prefix: " + str(Blank.command_prefix),
-                         icon_url=Blank.user.avatar_url)
+        global embed
+        embed = discord.Embed(title = "Blank's SelfBot",url="https://github.com/SauhardGaming/SelfBot",color=discord.Colour.random())
+        embed.add_field(name="\uD83E\uDDCA `help`", value="Shows all commands' info", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `embed`", value="Sends embed: '"+prefix+"embed <message>'", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `ping`", value="Shows the latency of the bot", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `empty`", value="Sends an empty character", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `purge`", value="Purge the message: "+prefix+"purge <amount>", inline=False)
         embed.set_thumbnail(url=Blank.user.avatar_url)
-        embed = discord.Embed(title = "Blank's EmbedBot",url="https://github.com/SauhardGaming/embedbot",description =prefix + "embed <message>",color=0xFF0000) 
-        await ctx.send(embed=embed)		
+        embed.set_footer(text = "Self bot made by Blank#9999 | Prefix: "+prefix)
+        await ctx.send(embed=embed)
+
+@Blank.command()
+async def ping(ctx):
+    await ctx.message.delete()
+    before = time.monotonic()
+    message = await ctx.send("Pinging...")
+    ping = (time.monotonic() - before) * 1000
+    await message.edit(content=f"`{int(ping)} ms`")
+    
+@Blank.command()
+async def purge(ctx, amount: int):
+    await ctx.message.delete()
+    async for message in ctx.message.channel.history(limit=amount).filter(lambda m: m.author == Blank.user).map(
+            lambda m: m):
+        try:
+            await message.delete()
+        except:
+            pass
+    
+@Blank.command()
+async def empty(ctx):
+    await ctx.message.delete()
+    await ctx.send(chr(173)) 
 
 @Blank.event
 async def on_message_edit(before, after):
@@ -186,7 +213,7 @@ async def on_message_edit(before, after):
 @Blank.command()
 async def embed(ctx, *, description):
     await ctx.message.delete()
-    embed = discord.Embed(description=description,color=0XFF0000)
+    embed = discord.Embed(description=description,color=discord.Colour.random())
     await ctx.send(embed=embed)
     
 if __name__ == '__main__':
