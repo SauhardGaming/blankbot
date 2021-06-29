@@ -175,7 +175,7 @@ async def help(ctx, category=None):
         global embed
         embed = discord.Embed(title = "Blank's SelfBot",url="https://github.com/SauhardGaming/SelfBot",color=discord.Colour.random())
         embed.add_field(name="\uD83E\uDDCA `help`", value="Shows all commands' info", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `embed`", value="Sends embed: '"+prefix+"embed <message>'", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `embed`", value="Sends embed: "+prefix+"embed <message>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `ping`", value="Shows the latency of the bot", inline=False)
         embed.add_field(name="\uD83E\uDDCA `empty`", value="Sends an empty character", inline=False)
         embed.add_field(name="\uD83E\uDDCA `purge`", value="Purge the message: "+prefix+"purge <amount>", inline=False)
