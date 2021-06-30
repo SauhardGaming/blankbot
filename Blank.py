@@ -174,7 +174,7 @@ async def help(ctx, category=None):
     await ctx.message.delete()
     if category is None:
         global embed
-        embed = discord.Embed(title = "Blank's SelfBot",url="https://github.com/SauhardGaming/SelfBot",color=discord.Colour.random())
+        embed = discord.Embed(title = "Blank's SelfBot",url="https://github.com/SauhardGaming/blankbot",color=discord.Colour.random())
         embed.add_field(name="\uD83E\uDDCA `help`", value="Shows all commands' info", inline=False)
         embed.add_field(name="\uD83E\uDDCA `embed`", value="Sends embed: "+prefix+"embed <message>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `ping`", value="Shows the latency of the bot", inline=False)
