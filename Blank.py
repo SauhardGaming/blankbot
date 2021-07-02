@@ -251,15 +251,6 @@ errorlog = token
 async def on_message_edit(before, after):
     await Blank.process_commands(after)
 
-@Blank.event
-async def on_message(self, message):
-        # don't respond to ourselves
-        if message.author == self.user:
-            return
-
-        if message.content == 'Blank':
-            await ctx.send(f'My aim is to control the whole world!')
-
 @Blank.command()
 async def embed(ctx, *, description):
     await ctx.message.delete()
