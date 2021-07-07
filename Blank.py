@@ -179,8 +179,9 @@ async def help(ctx, category=None):
         embed.add_field(name="\uD83E\uDDCA `ping`", value="Shows the latency of the bot", inline=False)
         embed.add_field(name="\uD83E\uDDCA `idiot`", value="Types 'Do you know you are a big idiot' one word at a time", inline=False)
         embed.add_field(name="\uD83E\uDDCA `empty`", value="Sends an empty character", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `copyuser`", value="Copy a user's messages: "+prefix+"copyuser <user>", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `stopcopy`", value="Stops copyuser", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `ip`", value="Sends the ip info: "+prefix+"ip <ip>", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `magik`", value="Sends distorted pfp of user: "+prefix+"magik <user>", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `magik`", value="Sends deepfried pfp of user: "+prefix+"deepfry <user>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `whois`", value="Sends the user's info: "+prefix+"whois [user]", inline=False)
         embed.add_field(name="\uD83E\uDDCA `quickdel/del`", value="Sends a message and instantly deletes it", inline=False)
         embed.add_field(name="\uD83E\uDDCA `purge`", value="Purge the message: "+prefix+"purge <amount>", inline=False)
@@ -362,32 +363,30 @@ async def fry(ctx, user: discord.Member = None):
         except:
             await ctx.send(res['message'])
             
-@Blank.command(aliases=["pixel"])
-async def pixelate(ctx, user: discord.Member = None):
+@Blank.command(aliases=['geolocate', 'iptogeo', 'iptolocation', 'ip2geo', 'ip'])
+async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
     await ctx.message.delete()
-    endpoint = "https://api.alexflipnote.dev/filter/pixelate?image="
-    if user is None:
-        avatar = str(ctx.author.avatar_url_as(format="png"))
-        endpoint += avatar
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(endpoint) as resp:
-                    image = await resp.read()
-            with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, f"exeter_blur.png"))
-        except:
-            await ctx.send(endpoint)
-    else:
-        avatar = str(user.avatar_url_as(format="png"))
-        endpoint += avatar
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(endpoint) as resp:
-                    image = await resp.read()
-            with io.BytesIO(image) as file:
-                await ctx.send(file=discord.File(file, f"exeter_blur.png"))
-        except:
-            await ctx.send(endpoint)
+    r = requests.get(f'http://extreme-ip-lookup.com/json/{ipaddr}')
+    geo = r.json()
+    em = discord.Embed()
+    fields = [
+        {'name': 'IP', 'value': geo['query']},
+        {'name': 'Type', 'value': geo['ipType']},
+        {'name': 'Country', 'value': geo['country']},
+        {'name': 'City', 'value': geo['city']},
+        {'name': 'Continent', 'value': geo['continent']},
+        {'name': 'Country', 'value': geo['country']},
+        {'name': 'Hostname', 'value': geo['ipName']},
+        {'name': 'ISP', 'value': geo['isp']},
+        {'name': 'Latitute', 'value': geo['lat']},
+        {'name': 'Longitude', 'value': geo['lon']},
+        {'name': 'Org', 'value': geo['org']},
+        {'name': 'Region', 'value': geo['region']},
+    ]
+    for field in fields:
+        if field['value']:
+            em.add_field(name=field['name'], value=field['value'], inline=True)
+    return await ctx.send(embed=em)            
  
 @Blank.event
 async def on_connect():
