@@ -177,13 +177,17 @@ async def help(ctx, category=None):
         embed.add_field(name="\uD83E\uDDCA `help`", value="Shows all commands' info", inline=False)
         embed.add_field(name="\uD83E\uDDCA `embed`", value="Sends embed: "+prefix+"embed <message>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `ping`", value="Shows the latency of the bot", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `idiot`", value="Types 'Do you know you are a big idiot' one word at a time", inline=False)
         embed.add_field(name="\uD83E\uDDCA `empty`", value="Sends an empty character", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `wyr`", value="Sends a would-you-rather question", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `topic`", value="Sends a chat topic", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `ms`", value="Starts a minesweeper game", inline=False)
         embed.add_field(name="\uD83E\uDDCA `ip`", value="Sends the ip info: "+prefix+"ip <ip>", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `link`", value="Sends hyperlink: "+prefix+"link <link> <message>", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `roll`", value="Selects a random number between 2 numbers: "+prefix+"roll <num 1> <num 2>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `magik`", value="Sends distorted pfp of user: "+prefix+"magik <user>", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `magik`", value="Sends deepfried pfp of user: "+prefix+"deepfry <user>", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `deepfry`", value="Sends deepfried pfp of user: "+prefix+"deepfry <user>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `whois`", value="Sends the user's info: "+prefix+"whois [user]", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `quickdel/del`", value="Sends a message and instantly deletes it", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `del`", value="Sends a message and instantly deletes it: "+prefix+"del <message>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `purge`", value="Purge the message: "+prefix+"purge <amount>", inline=False)
         embed.set_thumbnail(url=Blank.user.avatar_url)
         embed.set_footer(text = "Self bot made by Blank#9999 | Prefix: "+prefix)
@@ -206,7 +210,6 @@ async def userinfo(ctx, member: discord.Member = None):
     embed = discord.Embed(colour=discord.Colour.random(), timestamp=ctx.message.created_at,
                           title=f"User Info - {member}")
     embed.set_thumbnail(url=member.avatar_url)
-    embed.set_footer(text=f"Blank Selfbot | Selfbot made by Blank#9999")
 
     embed.add_field(name="ID:", value=member.id)
     embed.add_field(name="User Name:", value=member.display_name)
@@ -228,27 +231,6 @@ async def userinfo(ctx, member: discord.Member = None):
 async def quickdelete(ctx, *, args):
     await ctx.message.delete()
     await ctx.send(args, delete_after=0.0001)
- 
-@Blank.command()
-async def idiot(ctx):
-    await ctx.message.delete()
-    message = await ctx.send('```\nDo```')
-    await asyncio.sleep(0.5)
-    await message.edit(content="```\nYou```")
-    await asyncio.sleep(0.5)
-    await message.edit(content="```\nKnow```")
-    await asyncio.sleep(0.5)
-    await message.edit(content="```\nYou```")
-    await asyncio.sleep(0.5)
-    await message.edit(content="```\nAre```")
-    await asyncio.sleep(0.5)
-    await message.edit(content="```\nA```")
-    await asyncio.sleep(0.5)
-    await message.edit(content="```\nBig```")
-    await asyncio.sleep(0.5)
-    await message.edit(content="```\nIdiot!```")
-    await asyncio.sleep(0.5)
-    await message.delete()
     
 @Blank.command(aliases=["copyguild", "copyserver"])
 async def copy(ctx):  # b'\xfc'
@@ -363,6 +345,61 @@ async def fry(ctx, user: discord.Member = None):
         except:
             await ctx.send(res['message'])
             
+@Blank.command()
+async def roll(ctx, numa: int, numb: int):
+  await ctx.message.delete()
+  n = random.randint(numa, numb)
+  await ctx.send("I choose..."+str(n))
+            
+@Blank.command(aliases=['ms'])
+async def minesweeper(ctx, size: int = 5):
+    await ctx.message.delete()
+    size = max(min(size, 8), 2)
+    bombs = [[random.randint(0, size - 1), random.randint(0, size - 1)] for x in range(int(size - 1))]
+    is_on_board = lambda x, y: 0 <= x < size and 0 <= y < size
+    has_bomb = lambda x, y: [i for i in bombs if i[0] == x and i[1] == y]
+    message = "**Click to play**:\n"
+    for y in range(size):
+        for x in range(size):
+            tile = "||{}||".format(chr(11036))
+            if has_bomb(x, y):
+                tile = "||{}||".format(chr(128163))
+            else:
+                count = 0
+                for xmod, ymod in m_offets:
+                    if is_on_board(x + xmod, y + ymod) and has_bomb(x + xmod, y + ymod):
+                        count += 1
+                if count != 0:
+                    tile = "||{}||".format(m_numbers[count - 1])
+            message += tile
+        message += "\n"
+    await ctx.send(message)            
+            
+@Blank.command(aliases=['wouldyourather', 'would-you-rather', 'wyrq'])
+async def wyr(ctx):  # b'\xfc'
+    await ctx.message.delete()
+    r = requests.get('https://www.conversationstarters.com/wyrqlist.php').text
+    soup = bs4(r, 'html.parser')
+    qa = soup.find(id='qa').text
+    qb = soup.find(id='qb').text
+    message = await ctx.send(f"**Would you rather?**```\n{qa}\nor\n{qb}```")
+    await message.add_reaction("🅰")
+    await message.add_reaction("🅱")
+
+@Blank.command()
+async def link(ctx, link, *, message):
+  await ctx.message.delete()
+  em = discord.Embed(description=f"[{message}]({link})",colour = discord.Colour.random())
+  await ctx.send(embed=em)
+
+@Blank.command()
+async def topic(ctx):  # b'\xfc'
+    await ctx.message.delete()
+    r = requests.get('https://www.conversationstarters.com/generator.php').content
+    soup = bs4(r, 'html.parser')
+    topic = soup.find(id="random").text
+    await ctx.send("```\n"+topic+"```")            
+            
 @Blank.command(aliases=['geolocate', 'iptogeo', 'iptolocation', 'ip2geo', 'ip'])
 async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
     await ctx.message.delete()
@@ -386,12 +423,13 @@ async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
     for field in fields:
         if field['value']:
             em.add_field(name=field['name'], value=field['value'], inline=True)
-    return await ctx.send(embed=em)            
+    return await ctx.send(embed=em)
  
 @Blank.event
 async def on_connect():
       Clear()
       print(f'''{Fore.GREEN}Logged in as {Blank.user.name}''' + Fore.RESET)
+      await Blank.change_presence(activity = discord.Streaming(name = "🔴 Deep Sleep Music 24/7, Calming Music, Insomnia, Sleep, Relaxing Music, Study, Sleep Meditation", url = "https://www.youtube.com/watch?v=hqUv8jqFvhI"))
     
 if __name__ == '__main__':
     Init()
