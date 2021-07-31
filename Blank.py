@@ -206,7 +206,7 @@ async def userinfo(ctx, member: discord.Member = None):
     await ctx.message.delete()
     if not member:
         member = ctx.message.author
-    roles = [role for role in member.roles[1:]]
+    roles = ' '.join([role for role in member.roles[1:]]
     embed = discord.Embed(colour=discord.Colour.random(), timestamp=ctx.message.created_at,
                           title=f"User Info - {member}")
     embed.set_thumbnail(url=member.avatar_url)
