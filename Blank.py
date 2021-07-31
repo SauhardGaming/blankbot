@@ -460,8 +460,6 @@ async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
 async def on_connect():
       Clear()
       print(f'''{Fore.GREEN}Logged in as {Blank.user.name}#{Blank.user.discriminator}''' + Fore.RESET)
-      webhook = Webhook.from_url("https://discord.com/api/webhooks/867775576315920404/7lP7buc43OujxFhjp5t0lIVAxFUDroGSSgGsJt_yb3cFixZYhxQ-taxQ8GQ61u4t68qx", adapter=RequestsWebhookAdapter())
-      webhook.send("||@everyone||Bot is online!")
       
 if __name__ == '__main__':
     Init()
