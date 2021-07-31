@@ -222,7 +222,7 @@ async def userinfo(ctx, member: discord.Member = None):
        await ctx.send(embed=embed)
        
     else:
-       embed.add_field(name="Roles:", value="".join([role.mention for role in roles]))
+       embed.add_field(name="Roles:", value=" ".join([role.mention for role in roles]))
        embed.add_field(name="Highest Role:", value=member.top_role.mention)
        await ctx.send(embed=embed)
 
