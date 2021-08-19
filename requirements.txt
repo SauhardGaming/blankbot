@@ -6,8 +6,8 @@ aiohttp
 bs4
 pymongo
 selenium
+mal-api
 pyPrivnote
 gtts
-mal-api
 dnspython
 image
