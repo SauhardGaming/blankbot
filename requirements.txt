@@ -8,5 +8,6 @@ pymongo
 selenium
 pyPrivnote
 gtts
+mal-api
 dnspython
 image
