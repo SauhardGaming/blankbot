@@ -26,8 +26,6 @@ from urllib.request import urlopen
 from PIL import Image
 from colorama import Fore
 from discord import Webhook, RequestsWebhookAdapter
-from motor.motor_asyncio import AsyncIOMotorClient
-from redis.client import Redis
 from discord.ext import commands
 from discord.utils import get
 from gtts import gTTS
