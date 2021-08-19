@@ -48,7 +48,7 @@ loop = asyncio.get_event_loop()
 
 colorama.init()
 Blank = discord.Client()
-Blank = commands.Bot(description='Blank SelfBot', activity= discord.Streaming(name="Earth", url="https://github.com"), command_prefix=prefix, self_bot=True)
+Blank = commands.Bot(description='Blank SelfBot', command_prefix=prefix, self_bot=True)
 Blank.remove_command('help')
 languages = {
     'hu': 'Hungarian, Hungary',
