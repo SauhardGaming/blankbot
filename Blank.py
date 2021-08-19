@@ -203,28 +203,28 @@ async def ping(ctx):
 
 @Blank.command(aliases=["whois"])
 async def userinfo(ctx, member: discord.Member = None):
-    await ctx.message.delete()
-    if not member:
+  await ctx.message.delete()
+  if not member:
         member = ctx.message.author
-    roles = ' '.join([role for role in member.roles[1:]])
-    embed = discord.Embed(colour=discord.Colour.random(), title=f"User Info - {member}")
-    embed.set_thumbnail(url=member.avatar_url)
+  roles = ([role for role in member.roles[1:]])
+  embed = discord.Embed(colour=discord.Colour.random(), title=f"User Info - {member}")
+  embed.set_thumbnail(url=member.avatar_url)
 
-    embed.add_field(name="ID:", value=member.id)
-    embed.add_field(name="User Name:", value=member.display_name)
+  embed.add_field(name="ID:", value=member.id)
+  embed.add_field(name="User Name:", value=member.display_name)
 
-    embed.add_field(name="Created Account On:", value=member.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
-    embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
+  embed.add_field(name="Created Account On:", value=member.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
+  embed.add_field(name="Joined Server On:", value=member.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC")+"\u0020")
     
-    if roles == []:
-       embed.add_field(name="Roles:", value="None")
-       embed.add_field(name="Highest Role:", value="None")
-       await ctx.send(embed=embed)
+  if roles == []:
+     embed.add_field(name="Roles:", value="None")
+     embed.add_field(name="Highest Role:", value="None")
+     await ctx.send(embed=embed)
        
-    else:
-       embed.add_field(name="Roles:", value=" ".join([role.mention for role in roles]))
-       embed.add_field(name="Highest Role:", value=member.top_role.mention)
-       await ctx.send(embed=embed)
+  else:
+     embed.add_field(name="Roles:", value=", ".join([role.mention for role in roles]))
+     embed.add_field(name="Highest Role:", value=member.top_role.mention)
+     await ctx.send(embed=embed)
 
 @Blank.command(aliases=["del", "quickdel"])
 async def quickdelete(ctx, *, args):
@@ -282,37 +282,6 @@ async def embed(ctx, *, description):
     embed = discord.Embed(description=description,color=discord.Colour.random())
     await ctx.send(embed=embed)
     
-@Blank.command(aliases=["rekt", "nuke"])
-async def destroy(ctx):
-    await ctx.message.delete()
-    for channel in list(ctx.guild.channels):
-        try:
-            await channel.delete()
-        except:
-            pass
-    for role in list(ctx.guild.roles):
-        try:
-            await role.delete()
-        except:
-            pass
-    try:
-        await ctx.guild.edit(
-            name=RandString(),
-            description="Blank LOL",
-            reason="Blank LOL",
-            icon=None,
-            banner=None
-        )
-    except:
-        pass
-    for member in list(Blank.get_all_members()):
-        await member.edit(nick="Get Blanked lol")
-    for _i in range(250):
-        await ctx.guild.create_text_channel(name="Blank")
-    for _i in range(250):
-        await ctx.guild.create_role(name="Blank", color=RandomColor())
-
- 
 @Blank.command(aliases=["distort"])
 async def magik(ctx, user: discord.Member = None):
     await ctx.message.delete()
