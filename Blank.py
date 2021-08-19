@@ -451,7 +451,7 @@ async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
 
 
 @Blank.command()
-async def animea(ctx, *, anime):
+async def anime(ctx, *, anime):
     await ctx.message.delete()
     search = AnimeSearch(anime) 
     url= (search.results[0].url)
