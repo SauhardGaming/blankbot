@@ -203,6 +203,7 @@ async def help(ctx, category=None):
         embed.add_field(name="\uD83E\uDDCA `whois`", value="Sends the user's info: "+prefix+"whois [user]", inline=False)
         embed.add_field(name="\uD83E\uDDCA `del`", value="Sends a message and instantly deletes it: "+prefix+"del <message>", inline=False)
         embed.add_field(name="\uD83E\uDDCA `purge`", value="Purge the message: "+prefix+"purge <amount>", inline=False)
+        embed.add_field(name="\uD83E\uDDCA `purge`", value="Sends the plot/synopsis of an anime: "+prefix+"anime <anime name>", inline=False)
         embed.set_thumbnail(url=Blank.user.avatar_url)
         embed.set_footer(text = "Self bot made by Blank#9999 | Prefix: "+prefix)
         await ctx.send(embed=embed)
