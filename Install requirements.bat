@@ -6,4 +6,4 @@ pip install -r requirements.txt
 cls
 color 2
 echo Done!
-pause
+pause>nul
