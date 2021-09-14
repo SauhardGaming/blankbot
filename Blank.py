@@ -288,7 +288,7 @@ async def purge(ctx, amount: int):
 async def ascii(ctx, *, text):
     await ctx.message.delete()
     r = requests.get(f'http://artii.herokuapp.com/make?text={urllib.parse.quote_plus(text)}').text
-    if len('```' + r + '```') > 2000:
+    if len('```\n' + r + '```') > 2000:
         return
     await ctx.send(f"```{r}```")
     
