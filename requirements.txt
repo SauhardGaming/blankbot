@@ -11,3 +11,4 @@ pyPrivnote
 gtts
 dnspython
 image
+beautifulsoup4
