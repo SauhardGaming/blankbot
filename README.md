@@ -1,3 +1,5 @@
+<B>Please note that further updates for this bot will come in https://github.com/BlankMCPE/selfbot</B>
+
 <h1><span style="text-decoration: underline;"><strong>Blank's SelfBot</strong></span></h1>
 <h3>This is a selfbot designed to provide users with various features.</h3>
 <p>&nbsp;</p>
